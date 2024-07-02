@@ -1,0 +1,63 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+
+class AdivinhacaoAnimalApp:
+    def __init__(self, master):
+        self.master = master
+        master.title("Jogo de Adivinhação de Animais")
+
+        self.label_bemvindo = tk.Label(master, text="Bem-vindo ao Jogo de Adivinhação de Animais!")
+        self.label_bemvindo.pack()
+
+        self.label_palpite = tk.Label(master, text="Digite o nome do animal:")
+        self.label_palpite.pack()
+
+        self.entry_palpite = tk.Entry(master)
+        self.entry_palpite.pack()
+
+        self.button_palpite = tk.Button(master, text="Palpite", command=self.verificar_palpite)
+        self.button_palpite.pack()
+
+        self.label_tentativas = tk.Label(master, text="")
+        self.label_tentativas.pack()
+
+        self.tentativas_restantes = 6
+        self.animal_secreto = random.choice(["cachorro", "gato", "pássaro", "peixe", "coelho", "elefante", "leão", "tigre", "girafa", "macaco"])
+        
+        self.atualizar_tentativas()
+
+    def verificar_palpite(self):
+        palpite = self.entry_palpite.get().lower()
+        self.tentativas_restantes -= 1
+        self.atualizar_tentativas()
+
+        if palpite == self.animal_secreto:
+            messagebox.showinfo("Resultado", f"Parabéns! Você acertou o animal: {self.animal_secreto.capitalize()}")
+            self.reiniciar_jogo()
+        else:
+            if self.tentativas_restantes == 0:
+                messagebox.showinfo("Resultado", f"Suas tentativas acabaram! O animal correto era: {self.animal_secreto.capitalize()}")
+                self.reiniciar_jogo()
+            else:
+                messagebox.showinfo("Resultado", "Ops! Tente novamente.")
+
+    def atualizar_tentativas(self):
+        self.label_tentativas.config(text=f"Você tem {self.tentativas_restantes} tentativas restantes.")
+
+    def reiniciar_jogo(self):
+        resposta = messagebox.askquestion("Novo Jogo", "Deseja jogar novamente?")
+        if resposta == "yes":
+            self.tentativas_restantes = 6
+            self.animal_secreto = random.choice(["cachorro", "gato", "pássaro", "peixe", "coelho", "elefante", "leão", "tigre", "girafa", "macaco"])
+            self.atualizar_tentativas()
+        else:
+            self.master.quit()
+
+def main():
+    root = tk.Tk()
+    app = AdivinhacaoAnimalApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
